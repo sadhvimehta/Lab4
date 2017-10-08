@@ -45,7 +45,7 @@ public class Localizer {
 
 		angleOne = odometer.getThetaDegrees();
 		
-		while(getDistance() < WALL_DISTANCE - MARGIN) {
+		while(getDistance() < WALL_DISTANCE - MARGIN - 3) {
 			System.out.println("Distance: "+ getDistance());
 			navigator.setSpeed(-ROTATE_SPEED/2, ROTATE_SPEED/2);
 		}

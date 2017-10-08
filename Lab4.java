@@ -15,7 +15,6 @@ public class Lab4 {
 	// Left motor connected to output A
 	// Right motor connected to output D
 	// Sensor motor to output B
-	private static final EV3LargeRegulatedMotor sensorMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usSensorPort = LocalEV3.get().getPort("S1");
