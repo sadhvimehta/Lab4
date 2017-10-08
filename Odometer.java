@@ -154,7 +154,7 @@ public class Odometer extends Thread {
 			if (update[1])
 				y = position[1];
 			if (update[2])
-				theta = position[2];
+				theta = Math.toRadians(position[2]);
 		}
 	}
 

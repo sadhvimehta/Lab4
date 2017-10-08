@@ -78,7 +78,7 @@ public class Navigator {
 	
 
 	// Turn to the min angle that you have chosen
-	private void turnTo(double theta) {
+	public void turnTo(double theta) {
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 		
@@ -95,10 +95,27 @@ public class Navigator {
 		rightMotor.setSpeed(0);
 	}
 	
+	public void stop() {
+		leftMotor.stop(true);
+		rightMotor.stop(true);
+	}
+	
 	
 	public void setSpeed(int leftM, int rightM) {
 		leftMotor.setSpeed(leftM);
 		rightMotor.setSpeed(rightM);
+		
+		if (leftM > 0) {
+			leftMotor.forward();
+		} else {
+			leftMotor.backward();
+		}
+		
+		if (rightM > 0) {
+			rightMotor.forward();
+		} else {
+			rightMotor.backward();
+		}
 	}
 	
 }

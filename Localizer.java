@@ -1,5 +1,6 @@
 package ca.mcgill.ecse211.lab4;
 
+import lejos.hardware.Sound;
 import lejos.robotics.SampleProvider;
 
 public class Localizer {
@@ -9,26 +10,16 @@ public class Localizer {
 	private SampleProvider usSensor;
 	private Navigator navigator;
 	private final int WALL_DISTANCE = 30;
-	private final int MARGIN = 5;
+	private final int MARGIN = 3;
 	private final int ROTATE_SPEED;
-	public enum type {FALLING_EDGE, RISING_EDGE};
-	private type localizationType;
 	
 	public Localizer(Odometer odometer, SampleProvider usSensor, 
-					 float[] usData, Navigator navigator, type type) {
+					 float[] usData, Navigator navigator) {
 		this.usSensor = usSensor;
 		this.usData = usData;
 		this.odometer = odometer;
 		this.navigator = navigator;
 		this.ROTATE_SPEED = navigator.ROTATE_SPEED;
-		this.localizationType = type;
-		
-		
-		if (localizationType == type.FALLING_EDGE) {
-			fallingEdge();
-		} else if (localizationType == type.RISING_EDGE) {
-			
-		}
 	}
 	
 	
@@ -43,47 +34,69 @@ public class Localizer {
 	public void fallingEdge() {
 		double angleOne, angleTwo, orientation;
 		
-		while(getDistance() < WALL_DISTANCE + MARGIN) {
-			navigator.setSpeed(ROTATE_SPEED, -ROTATE_SPEED);
+		while(getDistance() > WALL_DISTANCE + MARGIN) {
+			System.out.println("Distance: "+ getDistance());
+			navigator.setSpeed(-ROTATE_SPEED/2, ROTATE_SPEED/2);
 		}
 		
-		angleOne = odometer.getThetaDegrees();
-		
-		while(getDistance() < WALL_DISTANCE + MARGIN) {
-			navigator.setSpeed(-ROTATE_SPEED, ROTATE_SPEED);
-		}
-		
-		angleTwo = odometer.getThetaDegrees();
-		
-		
-		orientation = getOrientation(angleOne, angleTwo);
-		
-		odometer.setPosition(new double [] {0.0, 0.0, 
-				odometer.getThetaDegrees()+orientation}, 
-				new boolean [] {true, true, true});
-	}
-	
-	public void risingEdge() {
-		double angleOne, angleTwo, orientation;
-		
-		while(getDistance() < WALL_DISTANCE + MARGIN) {
-			navigator.setSpeed(ROTATE_SPEED, -ROTATE_SPEED);
-		}
+		navigator.stop();
+		System.out.println("Distance Stop: "+ getDistance());
+		Sound.beep();
 
 		angleOne = odometer.getThetaDegrees();
 		
-		while(getDistance() > WALL_DISTANCE + MARGIN) {
-			navigator.setSpeed(-ROTATE_SPEED, ROTATE_SPEED);
+		while(getDistance() < WALL_DISTANCE - MARGIN) {
+			System.out.println("Distance: "+ getDistance());
+			navigator.setSpeed(-ROTATE_SPEED/2, ROTATE_SPEED/2);
 		}
+		
+		navigator.stop();
+		Sound.beep();
 		
 		angleTwo = odometer.getThetaDegrees();
 		
-		
-		orientation = getOrientation(angleOne, angleTwo);
+		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees() + 12;
 		
 		odometer.setPosition(new double [] {0.0, 0.0, 
-				odometer.getThetaDegrees()+orientation}, 
+				orientation}, 
 				new boolean [] {true, true, true});
+		
+		navigator.turnTo(-orientation);
+	}
+	
+	public void risingEdge() {
+		System.out.println("Rising Edge");
+		double angleOne, angleTwo, orientation;
+		System.out.println("Distance1.0: "+ getDistance());
+		while(getDistance() < WALL_DISTANCE - MARGIN) {
+			System.out.println("Distance1: "+ getDistance());
+			navigator.setSpeed(ROTATE_SPEED, -ROTATE_SPEED);
+		}
+		
+		navigator.stop();
+		System.out.println("Beep");
+		Sound.beep();
+		
+		angleOne = odometer.getThetaDegrees();
+		System.out.println("Distance2.0: " + getDistance());
+		while(getDistance() > WALL_DISTANCE + MARGIN) {
+			System.out.println("Distance2: " + getDistance());
+			navigator.setSpeed(ROTATE_SPEED, -ROTATE_SPEED);
+		}
+		
+		navigator.stop();
+		System.out.println("Beep");
+		Sound.beep();
+		
+		angleTwo = odometer.getThetaDegrees();
+		
+		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees() + 12;
+		
+		odometer.setPosition(new double [] {0.0, 0.0, 
+				orientation}, 
+				new boolean [] {true, true, true});
+		
+		navigator.turnTo(-orientation);
 	}
 	
 	public double getOrientation(double angleOne, double angleTwo) {

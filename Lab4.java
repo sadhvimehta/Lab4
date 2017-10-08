@@ -1,6 +1,5 @@
 package ca.mcgill.ecse211.lab4;
 
-import ca.mcgill.ecse211.lab4.Localizer.type;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -39,6 +38,8 @@ public class Lab4 {
 
 		Navigator navigator = new Navigator(leftMotor, rightMotor, odometer);
 		
+		Localizer localizer = new Localizer(odometer, usSensor, usData, navigator);
+		
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer,t);
 
 		do {
@@ -46,8 +47,8 @@ public class Lab4 {
 			t.clear();
 
 			// ask the user whether the motors should drive in a square or float
-			t.drawString("< Rising    | Falling >", 0, 0);
-			t.drawString("  Edge      | Edge     ", 0, 1);
+			t.drawString("< Rising | Falling >", 0, 0);
+			t.drawString("  Edge   | Edge     ", 0, 1);
 
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT
@@ -56,12 +57,12 @@ public class Lab4 {
 		if (buttonChoice == Button.ID_LEFT) {
 			odometer.start();
 			odometryDisplay.start();
-			new Localizer(odometer, usSensor, usData, navigator, type.FALLING_EDGE);
+			localizer.risingEdge();
 			
 		} else {
 			odometer.start();
 			odometryDisplay.start();
-
+			localizer.fallingEdge();
 		}
 		
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
