@@ -60,6 +60,7 @@ public class LightLocalizer {
 			if(colorData[0] < 0.25) {
 				Sound.beepSequenceUp();
 				navigation.stop();
+				navigation.setSpeed(0, 0);
 				break;
 			}
 			colorSensor.fetchSample(colorData, 0);
