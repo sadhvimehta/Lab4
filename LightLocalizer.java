@@ -76,7 +76,7 @@ public class LightLocalizer {
 		navigation.turnTo(215, false);
 		int lineIndex=0;
 		
-		navigation.driveDistance(1, false);
+		navigation.driveDistance(2, false);
 		while (lineIndex < 1) {
 			colorSensor.fetchSample(colorData, 0);
 			if(colorData[0] < 0.25) {
