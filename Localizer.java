@@ -34,20 +34,25 @@ public class Localizer {
 	public void fallingEdge() {
 		double angleOne, angleTwo, orientation;
 		
-		while(getDistance() > WALL_DISTANCE + MARGIN) {
+		while(getDistance() > WALL_DISTANCE - MARGIN) {
 			System.out.println("Distance: "+ getDistance());
 			navigator.setSpeed(-ROTATE_SPEED/2, ROTATE_SPEED/2);
 		}
 		
 		navigator.stop();
+		angleOne = odometer.getThetaDegrees();
 		System.out.println("Distance Stop: "+ getDistance());
 		Sound.beep();
-
-		angleOne = odometer.getThetaDegrees();
 		
-		while(getDistance() < WALL_DISTANCE - MARGIN - 3) {
-			System.out.println("Distance: "+ getDistance());
-			navigator.setSpeed(-ROTATE_SPEED/2, ROTATE_SPEED/2);
+		while(getDistance() < WALL_DISTANCE) {
+			navigator.setSpeed(ROTATE_SPEED/2, -ROTATE_SPEED/2);
+		}
+
+		
+		
+		while(getDistance() > WALL_DISTANCE - MARGIN) {
+			System.out.println("Distance: " + getDistance());
+			navigator.setSpeed(ROTATE_SPEED/2, -ROTATE_SPEED/2);
 		}
 		
 		navigator.stop();
@@ -55,13 +60,13 @@ public class Localizer {
 		
 		angleTwo = odometer.getThetaDegrees();
 		
-		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees() + 12;
+		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees();
 		
 		odometer.setPosition(new double [] {0.0, 0.0, 
 				orientation}, 
 				new boolean [] {true, true, true});
 		
-		navigator.turnTo(-orientation);
+		navigator.turnTo(-orientation, false);
 	}
 	
 	public void risingEdge() {
@@ -90,13 +95,13 @@ public class Localizer {
 		
 		angleTwo = odometer.getThetaDegrees();
 		
-		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees() + 12;
+		orientation = getOrientation(angleOne, angleTwo) + odometer.getThetaDegrees();
 		
 		odometer.setPosition(new double [] {0.0, 0.0, 
 				orientation}, 
 				new boolean [] {true, true, true});
 		
-		navigator.turnTo(-orientation);
+		navigator.turnTo(-orientation, false);
 	}
 	
 	public double getOrientation(double angleOne, double angleTwo) {

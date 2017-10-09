@@ -14,7 +14,7 @@ public class Navigator {
 	private final int MOTOR_ACCELERATION = 200;
 	
 	// navigation variables
-	public static final int FORWARD_SPEED = 250, ROTATE_SPEED = 100;
+	public static final int FORWARD_SPEED = 250, ROTATE_SPEED = 50;
 
 	public Navigator(EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, Odometer odometer) {
 		this.leftMotor = leftMotor;
@@ -22,8 +22,6 @@ public class Navigator {
 		this.odometer = odometer;
 		this.RADIUS = Lab4.RADIUS;
 		this.TRACK = Lab4.TRACK;
-		leftMotor.setAcceleration(MOTOR_ACCELERATION);
-		rightMotor.setAcceleration(MOTOR_ACCELERATION);
 	}
 	
 	// Convert how far they need to travel
@@ -58,7 +56,7 @@ public class Navigator {
 		}
 		
 		// turn to the minimum angle
-		turnTo(minAngle);
+		turnTo(minAngle, false);
 		
 		// calculate the distance to next point
 		double distance  = Math.hypot(deltaX, deltaY);
@@ -77,29 +75,39 @@ public class Navigator {
 	
 
 	// Turn to the min angle that you have chosen
-	public void turnTo(double theta) {
+	public void turnTo(double theta, boolean block) {
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 		
 		if(theta < 0) { // if angle is negative, turn to the left
 			leftMotor.rotate(-convertAngle(RADIUS, TRACK, -theta), true);
-			rightMotor.rotate(convertAngle(RADIUS, TRACK, -theta), false);
+			rightMotor.rotate(convertAngle(RADIUS, TRACK, -theta), block);
 		} 
 		else { // angle is positive, turn to the right
 			leftMotor.rotate(convertAngle(RADIUS, TRACK, theta), true);
-			rightMotor.rotate(-convertAngle(RADIUS, TRACK, theta), false);
+			rightMotor.rotate(-convertAngle(RADIUS, TRACK, theta), block);
 		}
 		
-		leftMotor.setSpeed(0);
-		rightMotor.setSpeed(0);
+//		leftMotor.setSpeed(0);
+//		rightMotor.setSpeed(0);
 	}
 	
 	public void stop() {
-		leftMotor.stop(true);
-		rightMotor.stop(true);
+		leftMotor.stop();
+		rightMotor.stop();
 	}
 	
-	
+	public void driveDistance(int distance, boolean forward) {
+		if (forward) {
+			leftMotor.rotate(convertDistance(RADIUS, distance), true);
+			rightMotor.rotate(convertDistance(RADIUS, distance), false);
+		} else {
+			leftMotor.rotate(-convertDistance(RADIUS, distance), true);
+			rightMotor.rotate(-convertDistance(RADIUS, distance), false);
+		}
+
+	}
+
 	public void setSpeed(int leftM, int rightM) {
 		leftMotor.setSpeed(leftM);
 		rightMotor.setSpeed(rightM);
@@ -117,4 +125,7 @@ public class Navigator {
 		}
 	}
 	
+	public boolean isNavigating() {
+		return (leftMotor.isMoving() && rightMotor.isMoving());
+	}
 }

@@ -139,7 +139,11 @@ public class Odometer extends Thread {
 		double result;
 
 		synchronized (lock) {
-			result = theta * 180/Math.PI;
+			if(theta>=0) {
+				result = Math.toDegrees(theta) % 360;
+ 			} else {
+ 				result = Math.toDegrees(theta)+360;
+ 			}
 		}
 
 		return result;
