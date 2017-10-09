@@ -5,7 +5,6 @@ import ca.mcgill.ecse211.lab4.Odometer;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
 public class Navigator {
-	// Tharsan is a boss ;)  
 	
 	
 	// vehicle variables

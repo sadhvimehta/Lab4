@@ -18,6 +18,11 @@ public class Lab4 {
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usSensorPort = LocalEV3.get().getPort("S1");
+	private static final EV3ColorSensor lightsensor = new EV3ColorSensor(LocalEV3.get().getPort("S4"));
+
+	private static SampleProvider colorSensor;
+	private static float[] colorData;
+
 	
 	
 	// Characteristics of our vehicle
@@ -38,6 +43,7 @@ public class Lab4 {
 		Navigator navigator = new Navigator(leftMotor, rightMotor, odometer);
 		
 		Localizer localizer = new Localizer(odometer, usSensor, usData, navigator);
+		LightLocalizer lightlocalizer = new LightLocalizer( odometer, colorSensor, colorData ,lightsensor, navigator);
 		
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer,t);
 
@@ -50,19 +56,27 @@ public class Lab4 {
 			t.drawString("  Edge   | Edge     ", 0, 1);
 
 			buttonChoice = Button.waitForAnyPress();
-		} while (buttonChoice != Button.ID_LEFT
+		} 
+		while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
 			odometer.start();
 			odometryDisplay.start();
-			localizer.risingEdge();
+			// localizer.risingEdge();
+			lightlocalizer.doLocalization();			
+
 			
 		} else {
 			odometer.start();
 			odometryDisplay.start();
-			localizer.fallingEdge();
+			// localizer.fallingEdge();
+			lightlocalizer.doLocalization();			
+
 		}
+	/*	if (buttonChoice2 == Button.ID_LEFT) {
+			lightlocalizer.doLocalization();			
+		}*/
 		
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 		System.exit(0);
